@@ -32,7 +32,7 @@ async function SignIn(req, res) {
         if (compare) {
             const token = uuidv4();
             await signRepository.InsertNewSession(searchByEmail[0].id, token);
-            res.status(200).send({ token: token });
+            res.status(200).send({ token: token, img: searchByEmail[0].img });
             return;
         } else {
             res.sendStatus(401);
