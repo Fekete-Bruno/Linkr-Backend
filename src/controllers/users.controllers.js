@@ -20,4 +20,24 @@ async function searchUser (req, res) {
     }
 };
 
-export { searchUser };
+async function listUser (req, res) {
+
+    const { id } = req.params;
+
+    try {
+
+        const userInfos = await usersRepository.listUser(id);
+
+        if (userInfos.rowCount > 0) {
+            res.status(200).send(userInfos.rows[0]);
+        } else {
+            return res.sendStatus(404);
+        } 
+        
+    } catch (error) {
+        console.log(error.message);
+        res.sendStatus(500); 
+    }
+};
+
+export { searchUser, listUser };
