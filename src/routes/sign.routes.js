@@ -1,7 +1,7 @@
 import express from 'express';
 import { SignUp, SignIn, SignOut, SignOutAll, SelectUsers, SelectSessions } from '../controllers/sign.controllers.js';
 import { SignUpSchema, SignInSchema } from '../middlewares/schemaValidation.middlewares.js';
-import UserAuthentication from '../middlewares/UserAuthentication.middlewares.js';
+import UserAuthentication from '../middlewares/userAuthentication.middlewares.js';
 
 const router = express.Router();
 
