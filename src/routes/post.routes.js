@@ -11,7 +11,8 @@ postRouter.post(
   validatePost,
   postController.postUrl
 );
-postRouter.delete("/post/:id", UserAuthentication, postController.deletePost);
-postRouter.put("/post/:id", UserAuthentication, postController.editPost);
+postRouter.get("/timeline", UserAuthentication, postController.getTimeline);
+postRouter.put("/posts/:id", UserAuthentication, postController.editPost);
+postRouter.delete("/posts/:id", UserAuthentication, postController.deletePost);
 
 export default postRouter;

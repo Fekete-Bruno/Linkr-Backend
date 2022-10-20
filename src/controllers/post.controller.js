@@ -1,52 +1,61 @@
-import * as postRepository from "../repositories/post.repository.js";
+import {
+  GetUrls,
+  InsertUrl,
+  updateDescription,
+  deleteUrl,
+} from "../repositories/post.repository.js";
 
 async function postUrl(req, res) {
   const userId = res.locals.searchToken[0].userId;
   const url = res.locals.url;
   const description = res.locals.description;
   try {
-    await postRepository.InsertUrl({ userId, url, description });
+    await InsertUrl({ userId, url, description });
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);
   }
-  res.sendStatus(201);
+  return res.sendStatus(201);
 }
 
-async function deletePost(req, res) {
+async function getTimeline(req, res) {
   try {
-    const userId = res.locals.searchToken[0].userId;
-    const postId = parseInt(req.params.id);
-
-    const result = await postRepository.deletePost(postId, userId);
-    console.log(userId, postId, result.rows);
-    if (result.rows.length === 0) {
-      res.status(400).send("Something went wrong");
-    } else {
-      res.status(204).send("Post deleted");
-    }
+    const query = await GetUrls();
+    return res.send(query.rows);
   } catch (error) {
-    res.status(400).send(error.message);
+    console.error(error);
+    return res.sendStatus(500);
   }
 }
 
 async function editPost(req, res) {
+  const { id } = req.params;
+  const { description } = req.body;
   const userId = res.locals.searchToken[0].userId;
-  const postId = parseInt(req.params.id);
-  const description = req.body.description;
 
   try {
-    const result = await postRepository.editPost(description, postId, userId);
-    console.log(userId, postId, description, result.rows);
-    if (result.rows.length === 0) {
-      res.status(400).send("Something went wrong");
-      return;
-    } else {
-      res.status(204).send("Post edited");
-    }
+    await updateDescription(description, id, userId);
+
+    res.sendStatus(200);
   } catch (error) {
-    res.status(400).send(error.message);
+    console.error(error.message);
+    res.sendStatus(500);
+    return;
   }
 }
 
-export { postUrl, deletePost, editPost };
+async function deletePost(req, res) {
+  const { id } = req.params;
+  const userId = res.locals.searchToken[0].userId;
+
+  try {
+    await deleteUrl(id, userId);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error.message);
+    res.sendStatus(500);
+    return;
+  }
+}
+
+export { postUrl, getTimeline, editPost, deletePost };

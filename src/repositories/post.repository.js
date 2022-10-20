@@ -7,28 +7,37 @@ async function InsertUrl({ userId, url, description }) {
   );
 }
 
-async function deletePost(postId, userId) {
-  const result = await connection.query(
-    `
-    DELETE FROM posts 
-    WHERE "id"=$1 AND "userId"=$2;`,
-    [postId, userId]
-  );
-
-  return result;
+async function GetUrls() {
+  return connection.query(`
+    SELECT posts.id AS "postId", url,description,posts."userId",name,img
+    FROM posts
+    JOIN users ON posts."userId"=users.id
+    ORDER BY posts.id
+    DESC LIMIT 20;
+`);
 }
 
-async function editPost(description, postId, userId) {
-  console.log(description, postId, userId);
-  const result = await connection.query(
+async function updateDescription(description, id, userId) {
+  await connection.query(
     `
     UPDATE posts
-    SET description=$1
-    WHERE id=$2 AND "userId"=$3;`,
-    [description, postId, userId]
+    SET description = $1
+    WHERE id = $2
+    AND "userId" = $3;
+    `,
+    [description, id, userId]
   );
-
-  return result;
 }
 
-export { InsertUrl, deletePost, editPost };
+async function deleteUrl(id, userId) {
+  await connection.query(
+    `
+      DELETE FROM posts
+      WHERE id = $1
+      AND "userId" = $2;
+    `,
+    [id, userId]
+  );
+}
+
+export { InsertUrl, GetUrls, updateDescription, deleteUrl };
