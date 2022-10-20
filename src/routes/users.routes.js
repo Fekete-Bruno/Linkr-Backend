@@ -6,7 +6,7 @@ import UserAuthentication from '../middlewares/userAuthentication.middlewares.js
 const router = express.Router();
 
 router.use(UserAuthentication);
-router.get('/searchusers', searchSchemaValidate, usersController.searchUser);
-router.get('/user/:id', usersController.listUser);
+router.get('/users', usersController.listUsers);
+router.get('/user/:id', usersController.listUserPosts);
 
 export default router;

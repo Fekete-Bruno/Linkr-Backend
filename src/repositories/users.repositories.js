@@ -1,14 +1,30 @@
 import { connection } from "../db/database.js";
 
-async function searchUser(word) {
-    const search = await connection.query(
-        `SELECT name, img FROM users WHERE name ILIKE '%${word}%';`
+async function listUsers() {
+    const user = await connection.query(
+        `SELECT id, name, img FROM users LIMIT 2;`
     );
     
-    return search;
+    return user;
 };
 
-async function listUser(id) {
+async function listUsersbyName(keyword) {
+    const user = await connection.query(
+        `SELECT id, name, img FROM users WHERE name ILIKE '%${keyword}%';`
+    );
+    
+    return user;
+};
+
+async function listUserbyId(id) {
+    const user = await connection.query(
+        `SELECT name, img FROM users WHERE id = $1;`, [id]
+    );
+    
+    return user;
+};
+
+async function listUserPosts(id) {
     const userInfos = connection.query(
         `
             SELECT 
@@ -26,7 +42,7 @@ async function listUser(id) {
             )
             AS "userPosts"
             FROM users
-            LEFT JOIN (
+            JOIN (
                 SELECT 
                     posts.id,
                     posts.url,
@@ -49,4 +65,4 @@ async function listUser(id) {
     return userInfos;
 };
 
-export { searchUser, listUser };
+export { listUsers, listUsersbyName, listUserbyId, listUserPosts };

@@ -1,18 +1,20 @@
 import * as usersRepository from '../repositories/users.repositories.js';
 
-async function searchUser (req, res) {
+async function listUsers (req, res) {
 
-    const { word } = req.body;
+    const { keyword } = req.query;
 
     try {
 
-        const users = await usersRepository.searchUser(word);
+        if (keyword) {
+            const users = await usersRepository.listUsersbyName(keyword);
 
-        if (users.rowCount > 0) {
-            res.status(200).send(users.rows);
-        } else {
-            return res.sendStatus(404);
-        }  
+            if (users.rowCount > 0) {
+                return res.status(200).send(users.rows);
+            } else {
+                return res.sendStatus(404);
+            }  
+        }
         
     } catch (error) {
         console.log(error.message);
@@ -20,18 +22,24 @@ async function searchUser (req, res) {
     }
 };
 
-async function listUser (req, res) {
+async function listUserPosts (req, res) {
 
     const { id } = req.params;
 
     try {
 
-        const userInfos = await usersRepository.listUser(id);
+        const user = await usersRepository.listUserbyId(id);
+
+        if (user.rowCount === 0) {
+            return res.sendStatus(404);
+        };
+
+        const userInfos = await usersRepository.listUserPosts(id);
 
         if (userInfos.rowCount > 0) {
             res.status(200).send(userInfos.rows[0]);
         } else {
-            return res.sendStatus(404);
+            res.status(200).send(user.rows[0]);
         } 
         
     } catch (error) {
@@ -40,4 +48,4 @@ async function listUser (req, res) {
     }
 };
 
-export { searchUser, listUser };
+export { listUsers, listUserPosts };

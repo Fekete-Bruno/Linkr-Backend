@@ -2,7 +2,7 @@ import searchSchema from "../schemas/search.schema.js";
 
 const searchSchemaValidate = async (req, res, next) => {
 
-    const validation = searchSchema.validate(req.body, { abortEarly: false });
+    const validation = searchSchema.validate(req.query, { abortEarly: false });
 
     if (validation.error) {
         const errors = validation.error.details.map((detail => detail.message));
