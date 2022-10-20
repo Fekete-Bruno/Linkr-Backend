@@ -1,4 +1,4 @@
-import { InsertUrl } from "../repositories/post.repository.js";
+import { GetUrls, InsertUrl } from "../repositories/post.repository.js";
 
 async function postUrl(req,res){
     const userId = (res.locals.searchToken[0].userId);
@@ -10,7 +10,18 @@ async function postUrl(req,res){
         console.error(error);
         return res.sendStatus(500);
     }
-    res.sendStatus(201);
+    return res.sendStatus(201);
 }
 
-export {postUrl}
+async function getTimeline(req,res){
+    try {
+        const query = await GetUrls();
+        return res.send(query.rows);
+
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(500);
+    }
+}
+
+export {postUrl,getTimeline}
