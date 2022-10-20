@@ -1,3 +1,4 @@
+import { connection } from "../db/database.js";
 import { GetUrls, InsertUrl } from "../repositories/post.repository.js";
 
 async function postUrl(req,res){
@@ -24,4 +25,30 @@ async function getTimeline(req,res){
     }
 }
 
-export {postUrl,getTimeline}
+async function updateDescription(req, res){
+
+    const { id } = req.params;
+    const { description } = req.body;
+    const userId = (res.locals.searchToken[0].userId);
+
+    try {
+        
+        await connection.query(
+            `
+                UPDATE posts
+                SET description = $1
+                WHERE id = $2
+                AND "userId" = $3;
+            `,
+            [description, id, userId]
+        );
+
+        res.sendStatus(200);
+        
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(500);
+    }
+};
+
+export {postUrl,getTimeline,updateDescription}
