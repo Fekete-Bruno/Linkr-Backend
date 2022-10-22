@@ -32,7 +32,7 @@ async function SignIn(req, res) {
         if (compare) {
             const token = uuidv4();
             await signRepository.InsertNewSession(searchByEmail[0].id, token);
-            res.status(200).send({ token: token, img: searchByEmail[0].img, id:searchByEmail[0].id });
+            res.status(200).send({ token: token, img: searchByEmail[0].img, id: searchByEmail[0].id });
             return;
         } else {
             res.sendStatus(401);
@@ -61,6 +61,10 @@ async function SignOutAll(req, res) {
     }
 }
 
+async function ValidateToken(req, res) {
+    res.sendStatus(200);
+}
+
 //INTERNAL CONTROLLER
 async function SelectUsers(req, res) {
     const search = (await signRepository.SelectUsers()).rows;
@@ -72,4 +76,4 @@ async function SelectSessions(req, res) {
     res.send(search);
 }
 
-export { SignUp, SignIn, SignOut, SignOutAll, SelectUsers, SelectSessions };
+export { SignUp, SignIn, SignOut, SignOutAll, ValidateToken, SelectUsers, SelectSessions };
