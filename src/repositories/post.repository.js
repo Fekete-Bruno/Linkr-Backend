@@ -29,14 +29,13 @@ async function updateDescription(description, id, userId) {
   );
 }
 
-async function deleteUrl(id, userId) {
+async function deleteUrl(id) {
   await connection.query(
     `
       DELETE FROM posts
       WHERE id = $1
-      AND "userId" = $2;
     `,
-    [id, userId]
+    [id]
   );
 }
 
