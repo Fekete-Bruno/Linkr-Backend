@@ -66,12 +66,12 @@ async function listUserPosts(id) {
                 LEFT JOIN likes
                 ON posts.id = likes."postId"
                 GROUP BY posts.id
-                ORDER BY posts."createdAt"
+                ORDER BY posts."createdAt" DESC
             )
             AS postInfos
             ON (userInfos.id = postInfos."userId")
             WHERE userInfos."id"= $1
-            GROUP BY userInfos.id, userInfos.name, userInfos.img, userInfos."postsCount"
+            GROUP BY userInfos.id, userInfos.name, userInfos.img, userInfos."postsCount";
         `,
         [id]
     );           
