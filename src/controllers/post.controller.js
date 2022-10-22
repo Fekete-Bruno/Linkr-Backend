@@ -8,21 +8,10 @@ import {
   deleteUrl,
 } from "../repositories/post.repository.js";
 
-const hashtagRegEx = /#[a-zA-ZÀ-ÿ0-9_-]+/g;
-
-function getCleanHashtags({ description }) {
-  const hashtagsList = description.match(hashtagRegEx);
-  const cleanHashtagsList = hashtagsList
-    .map(hashtag => hashtag
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, "")
-      .toLowerCase()
-      .slice(1)
-    );
-  return cleanHashtagsList;
-}
-
-
+import {
+  getCleanHashtags,
+  getSplittedDescription
+} from '../services/hashtags.services.js';
 
 async function postUrl(req, res) {
   const userId = res.locals.searchToken[0].userId;
@@ -32,7 +21,7 @@ async function postUrl(req, res) {
 
   try {
     const postInsertion = await InsertUrl({ userId, url, description });
-    if(hashtags.length > 0) {
+    if (hashtags.length > 0) {
       const { id: postId } = postInsertion.rows;
       const hashtagsInsertion = await InsertHashtags(hashtags);
       const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
@@ -48,10 +37,14 @@ async function postUrl(req, res) {
 async function getTimeline(req, res) {
   try {
     const selection = (await GetUrls()).rows;
+    const response = selection
+      .map(post => ({
+        ...post,
+        description: getSplittedDescription({ description: post.description })
+      })
+    );
 
-    
-
-    return res.send();
+    return res.send(response);
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);
@@ -68,7 +61,7 @@ async function editPost(req, res) {
     const descriptionUpdation = await updateDescription(description, id, userId);
     const { id: postId } = descriptionUpdation.rows;
     await DeletePostsHashtags(postId);
-    const hashtagsInsertion = await InsertHashtags(hashtags);    
+    const hashtagsInsertion = await InsertHashtags(hashtags);
     const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
     await InsertPostsHashtags({ postId, hashtagsIds });
 
