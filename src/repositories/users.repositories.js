@@ -28,39 +28,53 @@ async function listUserPosts(id) {
     const userInfos = connection.query(
         `
             SELECT 
-            users.id,
-            users.name,
-            users.img,
+            userInfos.id,
+            userInfos.name,
+            userInfos.img,
+            userInfos."postsCount",
             JSON_AGG (
                 JSON_BUILD_OBJECT(
                     'id', postInfos.id,
-                    'url', postInfos.url,
                     'description', postInfos.description,
+                    'url', postInfos.url,
                     'likes', postInfos."postLikes",
                     'createdAt', postInfos."createdAt"
                 )
             )
             AS "userPosts"
-            FROM users
-            JOIN (
+            FROM (
                 SELECT 
-                    posts.id,
+                    users.id, 
+                    users.name, 
+                    users.img,
+                    COUNT (posts."userId") AS "postsCount"
+                FROM users
+                LEFT JOIN posts
+                ON users.id = posts."userId"
+                GROUP BY users.id
+            )
+            AS userInfos
+            LEFT JOIN (
+                SELECT 
+                    posts.id, 
+                    posts."userId", 
+                    posts.description, 
                     posts.url,
-                    posts.description,
                     posts."createdAt",
                     COUNT (likes."postId") AS "postLikes"
                 FROM posts
                 LEFT JOIN likes
                 ON posts.id = likes."postId"
                 GROUP BY posts.id
+                ORDER BY posts."createdAt"
             )
             AS postInfos
-            ON users.id = postInfos.id
-            WHERE users.id= $1
-            GROUP BY users.id, users.name,  users.img, postInfos."createdAt"
-            ORDER BY postInfos."createdAt" DESC;
+            ON (userInfos.id = postInfos."userId")
+            WHERE userInfos."id"= $1
+            GROUP BY userInfos.id, userInfos.name, userInfos.img, userInfos."postsCount"
         `,
-    [id]);
+        [id]
+    );           
     
     return userInfos;
 };
