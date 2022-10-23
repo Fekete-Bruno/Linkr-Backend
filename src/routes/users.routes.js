@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.use(UserAuthentication);
 router.get('/users', usersController.listUsers);
-router.get('/user/:id', usersController.listUserPosts);
+router.get('/userinfos/:id', usersController.listUserbyId);
+router.get('/userposts/:id', usersController.listUserPosts);
 
 export default router;
