@@ -32,7 +32,7 @@ async function listUserPosts(req, res) {
     const userInfos = await usersRepository.listUserPosts(id);
 
     if (userInfos.rowCount > 0) {
-      res.status(200).send(userInfos.rows[0]);
+      res.status(200).send(userInfos.rows);
     } else {
       res.status(200).send(user.rows[0]);
     }
