@@ -41,6 +41,7 @@ async function listUserPosts(req, res) {
         }))
       };
       res.status(200).send(response);
+
     } else {
       res.status(200).send(user.rows[0]);
     }
