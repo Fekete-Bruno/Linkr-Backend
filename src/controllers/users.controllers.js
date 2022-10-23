@@ -18,7 +18,26 @@ async function listUsers(req, res) {
     console.log(error.message);
     res.sendStatus(500);
   }
-}
+};
+
+async function listUserbyId(req, res) {
+  const { id } = req.params;
+
+  try {
+
+    const user = await usersRepository.listUserbyId(id);
+
+    if (user.rowCount === 0) {
+      return res.sendStatus(404);
+    } else {
+      return res.status(200).send(user.rows[0]);
+    }
+    
+  } catch (error) {
+    console.log(error.message);
+    res.sendStatus(500);
+  }
+};
 
 async function listUserPosts(req, res) {
   const { id } = req.params;
@@ -30,25 +49,27 @@ async function listUserPosts(req, res) {
       return res.sendStatus(404);
     }
 
-    const userInfos = await usersRepository.listUserPosts(id);
+    const userPosts = await usersRepository.listUserPosts(id);
 
-    if (userInfos.rowCount > 0) {
-      const response = {
-        ...userInfos.rows[0],
-        userPosts: userInfos.rows[0].userPosts.map(post => ({
-          ...post,
-          description: getSplittedDescription({ description: post.description })
-        }))
-      };
+    if (userPosts.rowCount > 0) {
+      const selection = userPosts.rows;
+      const response = selection
+      .map(post => ({
+        ...post,
+        description: getSplittedDescription({ description: post.description })
+        })
+      );
+
       res.status(200).send(response);
 
     } else {
-      res.status(200).send(user.rows[0]);
+      res.sendStatus(404);
     }
+
   } catch (error) {
     console.log(error.message);
     res.sendStatus(500);
   }
-}
+};
 
-export { listUsers, listUserPosts };
+export { listUsers, listUserbyId, listUserPosts };
