@@ -1,4 +1,5 @@
 import * as usersRepository from "../repositories/users.repositories.js";
+import { getSplittedDescription } from "../services/hashtags.services.js";
 
 async function listUsers(req, res) {
   const { keyword } = req.query;
