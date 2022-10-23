@@ -1,4 +1,5 @@
 import * as usersRepository from "../repositories/users.repositories.js";
+import { getSplittedDescription } from '../services/hashtags.services.js';
 
 async function listUsers(req, res) {
   const { keyword } = req.query;
@@ -32,7 +33,14 @@ async function listUserPosts(req, res) {
     const userInfos = await usersRepository.listUserPosts(id);
 
     if (userInfos.rowCount > 0) {
-      res.status(200).send(userInfos.rows[0]);
+      const response = {
+        ...userInfos.rows[0],
+        userPosts: userInfos.rows[0].userPosts.map(post => ({
+          ...post,
+          description: getSplittedDescription({ description: post.description })
+        }))
+      };
+      res.status(200).send(response);
     } else {
       res.status(200).send(user.rows[0]);
     }
