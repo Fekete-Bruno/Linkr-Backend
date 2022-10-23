@@ -29,10 +29,17 @@ async function listUserPosts(req, res) {
       return res.sendStatus(404);
     }
 
-    const userInfos = await usersRepository.listUserPosts(id);
+    const userPosts = await usersRepository.listUserPosts(id);
+    
 
-    if (userInfos.rowCount > 0) {
-      res.status(200).send({user:user.rows[0],posts:userInfos.rows});
+    if (userPosts.rowCount > 0) {
+      const posts = userPosts.rows
+      .map(post => ({
+        ...post,
+        description: getSplittedDescription({ description: post.description })
+      })
+    );
+      res.status(200).send({user:user.rows[0],posts});
     } else {
       res.status(200).send(user.rows[0]);
     }
