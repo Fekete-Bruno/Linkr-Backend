@@ -13,7 +13,8 @@ function getCleanHashtags({ description }) {
   const hashtagsList = description.match(hashtagRegEx);
   const cleanHashtagsList = hashtagsList
     .map(hashtag => cleanString(hashtag));
-  return cleanHashtagsList;
+  const uniqueHashtagsList = [...new Set(cleanHashtagsList)];
+  return uniqueHashtagsList;
 }
 
 function getSplittedDescription({ description }) {

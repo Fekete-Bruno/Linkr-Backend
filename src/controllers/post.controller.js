@@ -22,7 +22,7 @@ async function postUrl(req, res) {
   try {
     const postInsertion = await InsertUrl({ userId, url, description });
     if (hashtags.length > 0) {
-      const { id: postId } = postInsertion.rows;
+      const { id: postId } = postInsertion.rows[0];
       const hashtagsInsertion = await InsertHashtags(hashtags);
       const hashtagsIds = hashtagsInsertion.rows.map(
         (hashtagId) => hashtagId.id
