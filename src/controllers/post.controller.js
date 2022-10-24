@@ -55,15 +55,15 @@ async function editPost(req, res) {
   const { id } = req.params;
   const { description } = req.body;
   const userId = res.locals.searchToken[0].userId;
-  // const hashtags = getCleanHashtags({ description });
+  const hashtags = getCleanHashtags({ description });
 
   try {
     const descriptionUpdation = await updateDescription(description, id);
-    // const { id: postId } = descriptionUpdation.rows;
-    // await DeletePostsHashtags(postId);
-    // const hashtagsInsertion = await InsertHashtags(hashtags);
-    // const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
-    // await InsertPostsHashtags({ postId, hashtagsIds });
+    const { id: postId } = descriptionUpdation.rows[0];
+    await DeletePostsHashtags(postId);
+    const hashtagsInsertion = await InsertHashtags(hashtags);
+    const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
+    await InsertPostsHashtags({ postId, hashtagsIds });
 
     res.sendStatus(200);
   } catch (error) {
