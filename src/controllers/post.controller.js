@@ -10,8 +10,8 @@ import {
 
 import {
   getCleanHashtags,
-  getSplittedDescription
-} from '../services/hashtags.services.js';
+  getSplittedDescription,
+} from "../services/hashtags.services.js";
 
 async function postUrl(req, res) {
   const userId = res.locals.searchToken[0].userId;
@@ -24,7 +24,9 @@ async function postUrl(req, res) {
     if (hashtags.length > 0) {
       const { id: postId } = postInsertion.rows;
       const hashtagsInsertion = await InsertHashtags(hashtags);
-      const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
+      const hashtagsIds = hashtagsInsertion.rows.map(
+        (hashtagId) => hashtagId.id
+      );
       await InsertPostsHashtags({ postId, hashtagsIds });
     }
   } catch (error) {
@@ -37,12 +39,10 @@ async function postUrl(req, res) {
 async function getTimeline(req, res) {
   try {
     const selection = (await GetUrls()).rows;
-    const response = selection
-      .map(post => ({
-        ...post,
-        description: getSplittedDescription({ description: post.description })
-      })
-    );
+    const response = selection.map((post) => ({
+      ...post,
+      description: getSplittedDescription({ description: post.description }),
+    }));
 
     return res.send(response);
   } catch (error) {
@@ -55,15 +55,15 @@ async function editPost(req, res) {
   const { id } = req.params;
   const { description } = req.body;
   const userId = res.locals.searchToken[0].userId;
-  const hashtags = getCleanHashtags({ description });
+  // const hashtags = getCleanHashtags({ description });
 
   try {
-    const descriptionUpdation = await updateDescription(description, id, userId);
-    const { id: postId } = descriptionUpdation.rows;
-    await DeletePostsHashtags(postId);
-    const hashtagsInsertion = await InsertHashtags(hashtags);
-    const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
-    await InsertPostsHashtags({ postId, hashtagsIds });
+    const descriptionUpdation = await updateDescription(description, id);
+    // const { id: postId } = descriptionUpdation.rows;
+    // await DeletePostsHashtags(postId);
+    // const hashtagsInsertion = await InsertHashtags(hashtags);
+    // const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
+    // await InsertPostsHashtags({ postId, hashtagsIds });
 
     res.sendStatus(200);
   } catch (error) {
