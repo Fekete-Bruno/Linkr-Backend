@@ -58,7 +58,7 @@ async function GetUrls() {
 }
 
 async function updateDescription(description, id) {
-  await connection.query(
+  return connection.query(
     `
     UPDATE posts
     SET description = $1

@@ -13,7 +13,8 @@ function getCleanHashtags({ description }) {
   const hashtagsList = description.match(hashtagRegEx);
   const cleanHashtagsList = hashtagsList
     .map(hashtag => cleanString(hashtag));
-  return cleanHashtagsList;
+  const uniqueHashtagsList = [...new Set(cleanHashtagsList)];
+  return uniqueHashtagsList;
 }
 
 function getSplittedDescription({ description }) {
@@ -36,7 +37,36 @@ function getSplittedDescription({ description }) {
   return splittedArray;
 }
 
+function formatPostsByHashtag(selection) {
+  const postIdList = selection.map(like => like.postId);
+  const uniquePostIdList = [...new Set(postIdList)];
+  const response = uniquePostIdList.map(postId => {
+    const { url, description, userId, name, img } = selection
+      .find(like => like.postId === postId);
+    const likeArray = selection
+      .filter(like => like.postId === postId)
+      .map(like => ({
+        userId: like.likeUserId,
+        name: like.likeUserName
+      }));
+    const likes = likeArray[0].userId ? likeArray.length : 0;
+    const post = {
+      postId,
+      url,
+      description: getSplittedDescription({ description }),
+      userId,
+      name,
+      img,
+      likes,
+      likeArray
+    };
+    return post;
+  });
+  return response;
+}
+
 export {
   getCleanHashtags,
-  getSplittedDescription
+  getSplittedDescription,
+  formatPostsByHashtag
 };
