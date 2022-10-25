@@ -21,7 +21,6 @@ app.use(Hashtags);
 app.use(Follows);
 app.use(Comments);
 
-
 export {
     app
 };
