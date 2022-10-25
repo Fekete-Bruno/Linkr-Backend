@@ -11,8 +11,4 @@ router.delete('/signout', UserAuthentication, SignOut);
 router.delete('/signoutall', UserAuthentication, SignOutAll);
 router.post('/validatetoken', UserAuthentication, ValidateToken);
 
-//Internal Control
-router.get('/selectusers', SelectUsers);
-router.get('/selectsessions', SelectSessions);
-
 export default router;

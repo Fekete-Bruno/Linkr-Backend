@@ -61,9 +61,11 @@ async function editPost(req, res) {
     const descriptionUpdation = await updateDescription(description, id);
     const { id: postId } = descriptionUpdation.rows[0];
     await DeletePostsHashtags(postId);
-    const hashtagsInsertion = await InsertHashtags(hashtags);
-    const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
-    await InsertPostsHashtags({ postId, hashtagsIds });
+    if(hashtags.length > 0) {
+      const hashtagsInsertion = await InsertHashtags(hashtags);
+      const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
+      await InsertPostsHashtags({ postId, hashtagsIds });
+    }
 
     res.sendStatus(200);
   } catch (error) {
