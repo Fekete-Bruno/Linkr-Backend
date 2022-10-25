@@ -8,9 +8,14 @@ async function PostComment(userId, postId, comment) {
     return connection.query(`INSERT INTO comments ("userId", "postId", comment) values($1, $2, $3);`, [userId, postId, comment]);
 }
 
+async function CheckIfFollows(followerId, followedId) {
+    return connection.query(`SELECT * FROM follows WHERE "followerId" = $1 AND "followedId" = $2`, [followerId, followedId]);
+}
+
 const commentRepository = {
     GetComments,
-    PostComment
+    PostComment,
+    CheckIfFollows
 }
 
 export { commentRepository };

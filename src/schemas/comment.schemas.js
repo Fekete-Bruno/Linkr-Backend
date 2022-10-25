@@ -6,4 +6,9 @@ const postCommentSchema = joi.object({
     comment: joi.string().empty().min(1).max(255).required()
 });
 
-export { postCommentSchema };
+const checkIfFollowsSchema = joi.object({
+    followerId: joi.number().required(),
+    followedId: joi.number().required()
+});
+
+export { postCommentSchema, checkIfFollowsSchema };
