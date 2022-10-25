@@ -30,7 +30,7 @@ async function followUser(req, res) {
 
     try {
 
-        if (followerId === followedId) {
+        if (followerId == followedId) {
             return res.sendStatus(400);
         }
 
@@ -64,7 +64,7 @@ async function unfollowUser(req, res) {
 
     try {
 
-        if (followerId === followedId) {
+        if (followerId == followedId) {
             return res.sendStatus(400);
         }
 
