@@ -7,6 +7,7 @@ import Posts from './routes/post.routes.js';
 import Likes from './routes/likes.routes.js';
 import Hashtags from './routes/hashtags.routes.js';
 import Comments from './routes/comments.routes.js';
+import Follows from './routes/follows.routes.js';
 
 const app = express();
 app.use(cors());
@@ -18,7 +19,7 @@ app.use(Posts);
 app.use(Likes);
 app.use(Hashtags);
 app.use(Comments);
-
+app.use(Follows);
 
 export {
     app

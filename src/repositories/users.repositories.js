@@ -18,7 +18,7 @@ async function listUsersbyName(keyword) {
 
 async function listUserbyId(id) {
     const user = await connection.query(
-        `SELECT name, img FROM users WHERE id = $1;`, [id]
+        `SELECT id, name, img FROM users WHERE id = $1;`, [id]
     );
     
     return user;
