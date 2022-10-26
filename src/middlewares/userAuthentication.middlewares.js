@@ -12,6 +12,7 @@ async function UserAuthentication(req, res, next) {
     const searchToken = (await signRepository.SelectSessionsByToken(token))
       .rows;
     if (searchToken.length === 0) {
+      console.log("caiu aqui");
       res.sendStatus(401);
       return;
     }
