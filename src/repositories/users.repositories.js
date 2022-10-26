@@ -10,7 +10,23 @@ async function listUsers() {
 
 async function listUsersbyName(keyword) {
     const user = await connection.query(
-        `SELECT id, name, img FROM users WHERE name ILIKE '%${keyword}%';`
+        `
+            SELECT 
+                users.id, 
+                name, 
+                img,
+                CASE
+                    WHEN (follows."followedId" IS NULL) 
+                    THEN 'false' 
+                    ELSE 'true' 
+                    END
+                AS following
+            FROM users
+            LEFT JOIN follows
+            ON users.id = follows."followedId"
+            WHERE name ILIKE '%${keyword}%'
+            ORDER BY follows."followedId";
+        `
     );
     
     return user;
