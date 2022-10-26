@@ -12,18 +12,24 @@ async function GetComments(req, res) {
 
 async function GetCommentsV2(req, res) {
   try {
-    const comments = (await commentRepository.GetComments(res.locals.body.postId)).rows;
+    const comments = (await commentRepository.GetCommentsV2(res.locals.body.userId, res.locals.body.postId)).rows;
 
-    for (let i = 0; i < comments.length; i++) {
+    /* for (let i = 0; i < comments.length; i++) {
       const checkIfFollows = (await commentRepository.CheckIfFollows(res.locals.body.userId, comments[i].userId)).rows;
       if (comments[i].userId === res.locals.body.userId) {
-        comments[i].follows = '• post’s author';
+        comments[i].follows = `• post's author`;
+        comments[i].nathalia = `• post's author`;
+        //comments[i].following = true;
       } else if (checkIfFollows.length > 0) {
         comments[i].follows = '• following';
+        comments[i].nathalia = `• post's author`;
+        //comments[i].following = false;
       } else {
         comments[i].follows = '';
+        comments[i].nathalia = `• post's author`;
+        //comments[i].following = 'aaaa';
       }
-    }
+    } */
 
     res.send(comments);
   } catch (error) {
