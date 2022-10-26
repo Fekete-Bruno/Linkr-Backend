@@ -37,8 +37,9 @@ async function postUrl(req, res) {
 }
 
 async function getTimeline(req, res) {
+  const userId = res.locals.searchToken[0].userId;
   try {
-    const selection = (await GetUrls()).rows;
+    const selection = (await GetUrls(userId)).rows;
     const response = selection.map((post) => ({
       ...post,
       description: getSplittedDescription({ description: post.description }),
@@ -47,6 +48,7 @@ async function getTimeline(req, res) {
     return res.send(response);
   } catch (error) {
     console.error(error);
+    console.log(error);
     return res.sendStatus(500);
   }
 }
