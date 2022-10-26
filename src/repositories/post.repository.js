@@ -32,7 +32,7 @@ async function DeletePostsHashtags(postId) {
   ]);
 }
 
-async function GetUrls() {
+async function GetUrls(followerId) {
   return connection.query(`
     SELECT posts.id AS "postId", url,description,posts."userId",name,img,COUNT ("likeData"."postId") AS "likes",
 	  JSON_AGG (
@@ -51,10 +51,12 @@ async function GetUrls() {
 		ON likes."userId"=users.id
 		GROUP BY likes."postId",likes."userId",users.name
     ) AS "likeData" ON posts.id = "likeData"."postId"
+    LEFT JOIN follows ON posts."userId" = follows."followedId"
+    WHERE follows."followerId" = $1
     GROUP BY posts.id,name,img
     ORDER BY posts.id
     DESC LIMIT 20;
-`);
+`, [followerId]);
 }
 
 async function updateDescription(description, id) {
