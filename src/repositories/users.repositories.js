@@ -8,9 +8,32 @@ async function listUsers() {
     return user;
 };
 
-async function listUsersbyName(keyword) {
+async function listUsersbyName(keyword, followerId) {
     const user = await connection.query(
-        `SELECT id, name, img FROM users WHERE name ILIKE '%${keyword}%';`
+        `
+            SELECT 
+                users.id, 
+                users.name, 
+                users.img,
+                CASE
+                    WHEN (follows."followedId" IS NULL)
+                    THEN false
+                    ELSE true
+                    END
+                AS following
+            FROM users
+            LEFT JOIN (
+                SELECT 
+                    follows."followedId"
+                    FROM follows
+                    WHERE follows."followerId" = $1
+            )
+            AS follows
+            ON users.id = follows."followedId"
+            WHERE name ILIKE '%${keyword}%'
+            ORDER BY following DESC;
+        `, 
+        [followerId]
     );
     
     return user;

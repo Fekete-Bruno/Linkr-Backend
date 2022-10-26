@@ -3,10 +3,11 @@ import { getSplittedDescription } from '../services/hashtags.services.js';
 
 async function listUsers(req, res) {
   const { keyword } = req.query;
+  const followerId = res.locals.searchToken[0].userId;
 
   try {
     if (keyword) {
-      const users = await usersRepository.listUsersbyName(keyword);
+      const users = await usersRepository.listUsersbyName(keyword, followerId);
 
       if (users.rowCount > 0) {
         return res.status(200).send(users.rows);
