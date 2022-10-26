@@ -1,18 +1,16 @@
 import express from "express";
 import * as postController from "../controllers/post.controller.js";
 import validatePost from "../middlewares/postValidation.middleware.js";
-import UserAuthentication from "../middlewares/userAuthentication.middlewares.js";
 
-const postRouter = express.Router();
+const router = express.Router();
 
-postRouter.post(
+router.post(
   "/post",
-  UserAuthentication,
   validatePost,
   postController.postUrl
 );
-postRouter.get("/timeline", UserAuthentication, postController.getTimeline);
-postRouter.put("/posts/:id", UserAuthentication, postController.editPost);
-postRouter.delete("/posts/:id", UserAuthentication, postController.deletePost);
+router.get("/timeline", postController.getTimeline);
+router.put("/posts/:id", postController.editPost);
+router.delete("/posts/:id", postController.deletePost);
 
-export default postRouter;
+export default router;

@@ -1,14 +1,12 @@
 import express from "express";
 import { postLike } from "../controllers/likes.controller.js";
 import validateLike from "../middlewares/likeValidation.middleware.js";
-import UserAuthentication from "../middlewares/userAuthentication.middlewares.js";
 
-const likesRouter = express.Router();
+const router = express.Router();
 
-likesRouter.post('/like',
-    UserAuthentication,
+router.post('/like',
     validateLike,
     postLike
 );
 
-export default likesRouter;
+export default router;
