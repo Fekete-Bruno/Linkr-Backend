@@ -10,6 +10,27 @@ async function GetComments(req, res) {
   }
 }
 
+async function GetCommentsV2(req, res) {
+  try {
+    const comments = (await commentRepository.GetComments(res.locals.body.postId)).rows;
+
+    for (let i = 0; i < comments.length; i++) {
+      const checkIfFollows = (await commentRepository.CheckIfFollows(res.locals.body.userId, comments[i].userId)).rows;
+      if (comments[i].userId === res.locals.body.userId) {
+        comments[i].follows = '• post’s author';
+      } else if (checkIfFollows.length > 0) {
+        comments[i].follows = '• following';
+      } else {
+        comments[i].follows = '';
+      }
+    }
+
+    res.send(comments);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
 async function PostComment(req, res) {
   try {
     //res.send(res.locals.body);
@@ -44,4 +65,4 @@ async function CheckIfFollows(req, res) {
   }
 }
 
-export { GetComments, PostComment, CheckIfFollows };
+export { GetComments, PostComment, CheckIfFollows, GetCommentsV2 };

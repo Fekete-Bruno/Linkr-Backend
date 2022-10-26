@@ -11,4 +11,9 @@ const checkIfFollowsSchema = joi.object({
     followedId: joi.number().required()
 });
 
-export { postCommentSchema, checkIfFollowsSchema };
+const getCommentsV2Schema = joi.object({
+    userId: joi.number().required(),
+    postId: joi.number().required()
+});
+
+export { postCommentSchema, checkIfFollowsSchema, getCommentsV2Schema };

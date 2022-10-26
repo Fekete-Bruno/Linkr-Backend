@@ -1,4 +1,4 @@
-import { postCommentSchema, checkIfFollowsSchema } from "../schemas/comment.schemas.js";
+import { postCommentSchema, checkIfFollowsSchema, getCommentsV2Schema } from "../schemas/comment.schemas.js";
 
 async function PostCommentSchema(req, res, next) {
     const validation = await postCommentSchema.validate(req.body, {
@@ -28,4 +28,18 @@ async function CheckIfFollowsSchema(req, res, next) {
     next();
 }
 
-export { PostCommentSchema, CheckIfFollowsSchema };
+async function GetCommentsV2Schema(req, res, next) {
+    const validation = await getCommentsV2Schema.validate(req.body, {
+        abortEarly: false,
+    });
+    if (validation.error) {
+        const errors = validation.error.details.map((error) => error.message);
+        res.status(422).send({ message: errors });
+        return;
+    }
+
+    res.locals.body = req.body;
+    next();
+}
+
+export { PostCommentSchema, CheckIfFollowsSchema, GetCommentsV2Schema };
