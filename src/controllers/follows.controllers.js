@@ -21,7 +21,7 @@ async function confirmFollowedUser(req, res) {
         console.log(err.message);
         res.sendStatus(500);
     }
-}
+};
 
 async function followUser(req, res) {
 
@@ -85,4 +85,40 @@ async function unfollowUser(req, res) {
 
 };
 
-export { confirmFollowedUser, followUser, unfollowUser };
+async function getFollowers(req, res) {
+
+    const userId = res.locals.searchToken[0].userId;
+
+    try {
+
+        const followers = await followsRepository.getUserFollowers(userId);
+        res.status(200).send(followers.rows);
+        
+    } catch (error) {
+        console.log(error.message);
+        res.sendStatus(500);
+    }
+};
+
+async function getFollows(req, res) {
+
+    const userId = res.locals.searchToken[0].userId;
+
+    try {
+
+        const follows = await followsRepository.getUserFollows(userId);
+        res.status(200).send(follows.rows);
+        
+    } catch (error) {
+        console.log(error.message);
+        res.sendStatus(500);
+    }
+};
+
+export { 
+    confirmFollowedUser, 
+    followUser, 
+    unfollowUser, 
+    getFollowers, 
+    getFollows 
+};
