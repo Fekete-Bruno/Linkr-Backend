@@ -33,30 +33,45 @@ async function DeletePostsHashtags(postId) {
 }
 
 async function GetUrls(followerId) {
-  return connection.query(`
-    SELECT posts.id AS "postId", url,description,posts."userId",name,img,COUNT ("likeData"."postId") AS "likes",
-	  JSON_AGG (
-                JSON_BUILD_OBJECT(
-                    'userId', "likeData"."userId",
-                  	'name', "likeData".username
-                )
-            )
-            AS "likeArray"
+  return connection.query(
+    `
+    SELECT 
+      posts.id AS "postId", 
+      url,
+      description,
+      posts."userId",
+      name,
+      img,
+      COUNT ("likeData"."postId") AS "likes",
+      "repostsData"."repostCount" AS "reposts",
+      JSON_AGG (
+        JSON_BUILD_OBJECT(
+          'userId', "likeData"."userId",
+          'name', "likeData".username
+      )) AS "likeArray"
     FROM posts
     JOIN users ON posts."userId"=users.id
     LEFT JOIN (
       SELECT "userId", "postId", name AS "username"
-		FROM likes
-		LEFT JOIN users
-		ON likes."userId"=users.id
-		GROUP BY likes."postId",likes."userId",users.name
+      FROM likes
+      LEFT JOIN users
+      ON likes."userId"=users.id
+      GROUP BY likes."postId",likes."userId",users.name
     ) AS "likeData" ON posts.id = "likeData"."postId"
+    LEFT JOIN (
+      SELECT "postId", COUNT ("postId") AS "repostCount" 
+      FROM reposts 
+      GROUP BY "postId"
+    ) AS "repostsData"
+    ON posts.id = "repostsData"."postId"
     LEFT JOIN follows ON posts."userId" = follows."followedId"
     WHERE follows."followerId" = $1
-    GROUP BY posts.id,name,img
+    GROUP BY posts.id,name,img, "reposts"
     ORDER BY posts.id
     DESC LIMIT 20;
-`, [followerId]);
+    `,
+    [followerId]
+  );
 }
 
 async function updateDescription(description, id) {
