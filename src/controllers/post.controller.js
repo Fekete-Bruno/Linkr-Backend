@@ -38,8 +38,9 @@ async function postUrl(req, res) {
 
 async function getTimeline(req, res) {
   const userId = res.locals.searchToken[0].userId;
+  const page = res.locals.page;
   try {
-    const selection = (await GetUrls(userId)).rows;
+    const selection = (await GetUrls(userId,page)).rows;
     const response = selection.map((post) => ({
       ...post,
       description: getSplittedDescription({ description: post.description }),
