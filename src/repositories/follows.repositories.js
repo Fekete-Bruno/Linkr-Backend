@@ -21,18 +21,52 @@ async function insertFollow(followerId, followedId) {
    
  };
 
- async function deleteFollow(followerId, followedId) {
+async function deleteFollow(followerId, followedId) {
 
-    const unfollow = await connection.query(
-        `
-            DELETE FROM follows 
-            WHERE "followerId"=$1 AND "followedId"=$2;
-        `,
-        [followerId, followedId]
-    );
+const unfollow = await connection.query(
+    `
+        DELETE FROM follows 
+        WHERE "followerId"=$1 AND "followedId"=$2;
+    `,
+    [followerId, followedId]
+);
 
-    return unfollow;
+return unfollow;
 
- };
+};
 
- export { getFollow, insertFollow, deleteFollow };
+async function getUserFollowers(userId) {
+
+const followers = await connection.query(
+    `
+        SELECT * FROM follows 
+        WHERE "followedId" = $1;
+    `,
+    [userId]
+);
+
+return followers;
+
+};
+
+async function getUserFollows(userId) {
+
+const follows = await connection.query(
+    `
+        SELECT * FROM follows 
+        WHERE "followerId" = $1;
+    `,
+    [userId]
+);
+
+return follows;
+
+};
+
+ export { 
+    getFollow, 
+    insertFollow, 
+    deleteFollow, 
+    getUserFollowers, 
+    getUserFollows 
+};
