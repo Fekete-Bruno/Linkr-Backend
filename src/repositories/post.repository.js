@@ -43,7 +43,7 @@ async function GetUrls(followerId,page) {
       name,
       img,
       COUNT ("likeData"."postId") AS "likes",
-      "repostsData"."repostCount" AS "reposts",
+      COALESCE("repostsData"."repostCount", 0) AS "reposts",
       JSON_AGG (
         JSON_BUILD_OBJECT(
           'userId', "likeData"."userId",
@@ -59,7 +59,7 @@ async function GetUrls(followerId,page) {
       GROUP BY likes."postId",likes."userId",users.name
     ) AS "likeData" ON posts.id = "likeData"."postId"
     LEFT JOIN (
-      SELECT "postId", COUNT ("postId") AS "repostCount" 
+      SELECT "postId", COUNT("postId") AS "repostCount" 
       FROM reposts 
       GROUP BY "postId"
     ) AS "repostsData"
