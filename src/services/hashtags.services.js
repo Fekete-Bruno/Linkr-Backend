@@ -41,7 +41,7 @@ function formatPostsByHashtag(selection) {
   const postIdList = selection.map(like => like.postId);
   const uniquePostIdList = [...new Set(postIdList)];
   const response = uniquePostIdList.map(postId => {
-    const { url, description, userId, name, img } = selection
+    const { url, description, userId, name, img, reposts } = selection
       .find(like => like.postId === postId);
     const likeArray = selection
       .filter(like => like.postId === postId)
@@ -58,7 +58,8 @@ function formatPostsByHashtag(selection) {
       name,
       img,
       likes,
-      likeArray
+      likeArray,
+      reposts
     };
     return post;
   });

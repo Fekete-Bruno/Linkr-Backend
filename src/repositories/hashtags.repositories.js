@@ -23,7 +23,8 @@ async function selectPostsByHashtag(hashtag) {
             u1.name,
             u1.img,
             likes."userId" AS "likeUserId",
-            u2.name AS "likeUserName"
+            u2.name AS "likeUserName",
+            COUNT(reposts.id) AS "reposts"
         FROM posts
             JOIN users u1
                 ON posts."userId" = u1.id
@@ -35,6 +36,8 @@ async function selectPostsByHashtag(hashtag) {
                 ON posts.id = likes."postId"
             LEFT JOIN users u2
                 ON likes."userId" = u2.id
+            LEFT JOIN reposts
+                ON reposts."postId" = posts.id
         WHERE hashtags.hashtag = $1
         GROUP BY
             likes.id,
