@@ -7,7 +7,7 @@ import {
   updateDescription,
   deleteUrl,
 } from "../repositories/post.repository.js";
-
+import { listFollowsReposts } from "../repositories/reposts.repositories.js";
 import {
   getCleanHashtags,
   getSplittedDescription,
@@ -40,7 +40,10 @@ async function getTimeline(req, res) {
   const userId = res.locals.searchToken[0].userId;
   const page = res.locals.page;
   try {
-    const selection = (await GetUrls(userId,page)).rows;
+    const selectionFollows = (await GetUrls(userId, page)).rows;
+    const selectionReposts = (await listFollowsReposts(userId, page)).rows;
+
+    const selection = [...selectionFollows, ...selectionReposts];
     const response = selection.map((post) => ({
       ...post,
       description: getSplittedDescription({ description: post.description }),
@@ -64,9 +67,11 @@ async function editPost(req, res) {
     const descriptionUpdation = await updateDescription(description, id);
     const { id: postId } = descriptionUpdation.rows[0];
     await DeletePostsHashtags(postId);
-    if(hashtags.length > 0) {
+    if (hashtags.length > 0) {
       const hashtagsInsertion = await InsertHashtags(hashtags);
-      const hashtagsIds = hashtagsInsertion.rows.map(hashtagId => hashtagId.id);
+      const hashtagsIds = hashtagsInsertion.rows.map(
+        (hashtagId) => hashtagId.id
+      );
       await InsertPostsHashtags({ postId, hashtagsIds });
     }
 

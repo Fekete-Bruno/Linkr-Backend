@@ -6,6 +6,4 @@ const router = express.Router();
 
 router.post("/repost/:id", repostMiddleware, repostController.repost);
 
-router.get("/userposts/:id", usersController.listUserPosts);
-
 export default router;
