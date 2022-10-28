@@ -18,6 +18,15 @@ async function checkRepost(userId, postId) {
   );
 }
 
+async function checkPostOwner(userId, postId) {
+  return connection.query(
+    `SELECT *
+    FROM posts
+    WHERE "userId"=$1 AND posts.id=$2`,
+    [userId, postId]
+  );
+}
+
 async function listUserReposts(userId) {
   return connection.query(
     `
@@ -60,4 +69,4 @@ async function listUserReposts(userId) {
   );
 }
 
-export { insertRepost, checkRepost, listUserReposts };
+export { insertRepost, checkRepost, checkPostOwner, listUserReposts };
