@@ -64,7 +64,8 @@ async function listUserReposts(userId) {
     LEFT JOIN users AS u3
       ON "repostsData"."userId"=u3.id
     WHERE posts."userId"=$1 OR "repostsData"."userId"=$1 
-    GROUP BY posts.id, u1.name, u1.img, u3.name, "repostCount"`,
+    GROUP BY posts.id, u1.name, u1.img, u3.name, "repostCount"
+    ORDER BY "postId" DESC`,
     [userId]
   );
 }
