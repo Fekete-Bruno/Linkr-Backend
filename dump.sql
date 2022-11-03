@@ -452,6 +452,10 @@ COPY public.comments (id, "userId", "postId", comment, "createdAt") FROM stdin;
 29	16	68	Opa nay	2022-10-26 12:06:30.169908
 30	13	60	teste	2022-10-26 17:20:13.244846
 31	16	81	Yago	2022-10-26 19:50:55.260535
+32	15	81	Yago	2022-10-28 21:10:28.077812
+33	15	81	Yago	2022-10-28 21:10:48.39843
+34	15	69	Yago?	2022-10-28 21:11:01.118037
+35	15	62	Yago???!?!?!	2022-10-28 21:11:18.108913
 \.
 
 
@@ -473,6 +477,8 @@ COPY public.follows (id, "followerId", "followedId") FROM stdin;
 81	15	16
 82	15	13
 83	15	7
+84	15	18
+86	18	15
 41	20	16
 44	10	19
 45	10	20
@@ -508,7 +514,13 @@ COPY public.hashtags (id, hashtag) FROM stdin;
 60	hashtag
 61	busca
 62	trending
+64	novissimahashtag
 52	wild
+66	novanovissima
+67	novissima
+68	news
+69	snake_case
+70	com-hifen
 \.
 
 
@@ -549,6 +561,10 @@ COPY public.likes (id, "postId", "userId", "createdAt") FROM stdin;
 148	68	7	2022-10-25 18:49:16.230309
 149	64	7	2022-10-25 18:49:23.209872
 151	59	13	2022-10-26 17:21:42.562998
+152	61	13	2022-10-28 02:44:30.014349
+154	82	15	2022-10-28 21:09:58.609554
+155	81	15	2022-10-28 21:10:15.725417
+156	80	15	2022-10-28 21:10:18.68325
 84	37	7	2022-10-23 03:54:50.770024
 85	38	7	2022-10-23 03:55:16.040816
 \.
@@ -604,6 +620,9 @@ COPY public.posts (id, "userId", url, description, "createdAt") FROM stdin;
 54	13	https://microsoft.com	Testando algumas #hashtags #aqui	2022-10-23 01:17:41.405101
 56	13	https://www.netflix.com	Novas #tentativas #de	2022-10-24 16:49:05.626603
 57	13	https://www.netflix.com	Novas #tentativas #de	2022-10-24 16:52:43.064619
+82	13	https://dra.io	Com #novanovissima #novissima	2022-10-28 00:34:37.249272
+84	13	https://twitter.com	Testando #snake_case e #com-hífen	2022-10-28 20:08:52.742661
+83	15	https://www.g1.com	site novo	2022-10-28 16:40:50.018164
 59	13	https://nintendo.com	#Breath #of #The #Wild	2022-10-24 17:29:13.959245
 60	13	https://nintendo.com	#Breath #of #Wild	2022-10-24 17:29:23.320814
 61	13	https://nintendo.com	#Breath #Wild	2022-10-24 17:29:27.849374
@@ -635,6 +654,10 @@ COPY public."postsHashtags" (id, "postId", "hashtagId") FROM stdin;
 24	62	59
 25	63	60
 27	81	52
+30	82	66
+31	82	67
+33	84	69
+34	84	70
 \.
 
 
@@ -661,6 +684,11 @@ COPY public.reposts (id, "userId", "postId", "createdAt") FROM stdin;
 19	15	61	2022-10-26 19:18:47.554159
 20	7	61	2022-10-26 19:19:19.614181
 21	13	61	2022-10-26 19:19:59.531683
+22	18	68	2022-10-28 17:29:37.422055
+23	18	45	2022-10-28 17:32:39.264964
+24	18	83	2022-10-28 18:28:01.005353
+28	15	16	2022-10-28 21:06:27.813111
+30	15	84	2022-10-28 21:07:56.313546
 \.
 
 
@@ -715,13 +743,19 @@ COPY public.sessions (id, "userId", token, "createdAt") FROM stdin;
 208	10	29c42662-b411-4504-8110-2fa388d10563	2022-10-26 17:45:00.379249
 209	18	400a86cd-2d5e-4d20-a277-ddefd7d61248	2022-10-26 18:06:30.963686
 210	18	f4b31280-dfc5-4f46-8588-5f17b7a5a4e5	2022-10-26 18:06:42.848107
-211	13	2d5a6ce4-7e11-4188-b3c4-b23b3c326a92	2022-10-26 21:55:40.264408
 212	10	1019f056-404c-43dc-86cd-a6c3b218d312	2022-10-26 22:44:59.313078
 214	10	30331c45-b2c1-4fc5-be25-7360965ea77d	2022-10-27 13:59:50.604506
-215	18	7ba53b2e-42df-448c-b45e-c64f0d58a831	2022-10-27 14:25:09.272214
 216	7	b37882a6-7a49-4017-ba9f-eb5c89143823	2022-10-27 19:20:37.335445
-217	15	6c920405-896b-46ae-bddf-4f702f835ecb	2022-10-27 19:24:03.562546
-218	7	ce68f0af-aa8c-4bdd-84c4-ca76da224280	2022-10-27 20:53:44.801736
+219	7	49b7b74d-5ff6-457d-9c6b-c03a7e05307e	2022-10-27 21:57:42.671625
+220	7	b56e5997-a59b-4947-b426-0b0ce68a89b5	2022-10-27 22:00:53.756762
+221	7	cfae71f7-cddc-4406-9b48-103e7c094149	2022-10-28 01:51:02.30785
+222	7	031a3914-c7cf-488b-9495-9b4791abceb5	2022-10-28 02:27:20.261456
+223	10	ab83e772-79d5-412d-8ee9-096de2df0326	2022-10-28 19:00:01.955116
+225	18	f9926a1f-cfb6-4f85-9733-02355b1c72dc	2022-10-28 19:01:47.520518
+226	18	5f77ee89-d6cc-4da3-b48c-021e5c1b8465	2022-10-28 19:01:53.825989
+227	15	a1e0fd75-4cc8-4e2d-8dde-be2ccb870a77	2022-10-28 19:26:52.749874
+229	7	2676e356-6daa-4240-8d9a-a47e9c52277c	2022-10-28 20:04:04.535366
+231	15	0126d162-6b14-48a5-a446-59b4428d3023	2022-10-28 20:27:27.976095
 \.
 
 
@@ -758,56 +792,56 @@ COPY public.users (id, name, email, img, password, "createdAt") FROM stdin;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.comments_id_seq', 31, true);
+SELECT pg_catalog.setval('public.comments_id_seq', 35, true);
 
 
 --
 -- Name: follows_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.follows_id_seq', 83, true);
+SELECT pg_catalog.setval('public.follows_id_seq', 86, true);
 
 
 --
 -- Name: hashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.hashtags_id_seq', 63, true);
+SELECT pg_catalog.setval('public.hashtags_id_seq', 70, true);
 
 
 --
 -- Name: likes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.likes_id_seq', 151, true);
+SELECT pg_catalog.setval('public.likes_id_seq', 156, true);
 
 
 --
 -- Name: postsHashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public."postsHashtags_id_seq"', 27, true);
+SELECT pg_catalog.setval('public."postsHashtags_id_seq"', 34, true);
 
 
 --
 -- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.posts_id_seq', 81, true);
+SELECT pg_catalog.setval('public.posts_id_seq', 84, true);
 
 
 --
 -- Name: reposts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.reposts_id_seq', 21, true);
+SELECT pg_catalog.setval('public.reposts_id_seq', 30, true);
 
 
 --
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fkwuwkslxyhcap
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 218, true);
+SELECT pg_catalog.setval('public.sessions_id_seq', 231, true);
 
 
 --
