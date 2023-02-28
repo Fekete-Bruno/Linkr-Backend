@@ -10,11 +10,13 @@ import postRouter from './post.routes.js';
 import repostsRouter from './reposts.routes.js';
 import signRouter from './sign.routes.js';
 import usersRouter from './users.routes.js';
+import healthRouter from './health.routes.js'
 
 const router = Router();
 
 router.use(signRouter);
 router.use(commentsRouter);
+router.use(healthRouter);
 
 router.use(UserAuthentication);
 
